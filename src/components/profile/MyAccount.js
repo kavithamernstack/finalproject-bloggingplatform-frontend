@@ -41,7 +41,7 @@ function MyAccount() {
 
     const fetchData = async () => {
       try {
-        const { data: profileData } = await api.get("/users/myprofile", {
+        const { data: profileData } = await api.get("/api/users/myprofile", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setProfile(profileData);

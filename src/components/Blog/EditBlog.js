@@ -37,7 +37,7 @@ export default function EditBlog() {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const res = await api.get(`/posts/${id}`);
+                const res = await api.get(`/api/posts/${id}`);
                 const post = res.data;
 
                 setTitle(post.title || "");
@@ -67,7 +67,7 @@ export default function EditBlog() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await api.get("/categories"); // points to /api/categories
+                const res = await api.get("/api/categories"); // points to /api/categories
                 setCategories(res.data); // [{_id, name}, ...]
             } catch (err) {
                 console.error("Failed to fetch categories:", err);
@@ -108,7 +108,7 @@ export default function EditBlog() {
             formData.append("tags", JSON.stringify(tags));
             if (banner) formData.append("banner", banner);
 
-            await api.put(`/posts/${id}`, formData, {
+            await api.put(`/api/posts/${id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 

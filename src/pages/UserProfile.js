@@ -44,7 +44,7 @@ function EditProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await api.get("/users/myprofile");
+        const { data } = await api.get("/api/users/myprofile");
         setUser(data);
         setAvatarPreview(data.avatar || "");
         setContextUser(data); // initialize context

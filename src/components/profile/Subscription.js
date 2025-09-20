@@ -17,13 +17,13 @@ export default function Subscriptions() {
         if (!user) return;
 
         //  Blogger Subscriptions
-        const { data: bloggers } = await api.get("/subscriptions/bloggers", {
+        const { data: bloggers } = await api.get("/api/subscriptions/bloggers", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setBloggerSubs(bloggers);
 
         // Category Subscriptions (blogs from subscribed categories)
-        const { data } = await api.get("/subscriptions/categories", {
+        const { data } = await api.get("/api/subscriptions/categories", {
           headers: { Authorization: `Bearer ${user.token}` },
           params: { t: Date.now() } // bypass cache
         });
@@ -39,7 +39,7 @@ export default function Subscriptions() {
   // Unsubscribe blogger
   const handleUnsubscribeBlogger = async (bloggerId) => {
     try {
-      await api.delete(`/subscription/${bloggerId}`, {
+      await api.delete(`/api/subscription/${bloggerId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setBloggerSubs((prev) => prev.filter((b) => b._id !== bloggerId));

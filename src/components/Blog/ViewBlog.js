@@ -30,10 +30,10 @@ export default function ViewBlog() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await api.get(`/posts/${id}`);
+        const res = await api.get(`/api/posts/${id}`);
         setPost(res.data);
 
-        const { data: commentsData } = await api.get(`/comments/post/${id}`);
+        const { data: commentsData } = await api.get(`/api/comments/post/${id}`);
         setComments(commentsData);
       } catch (err) {
         console.error("Error fetching post/comments:", err);
@@ -50,7 +50,7 @@ export default function ViewBlog() {
 
     try {
       const { data } = await api.post(
-        "/comments",
+        "/api/comments",
         { postId: id, content: newComment },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -67,7 +67,7 @@ export default function ViewBlog() {
 
     try {
       const { data } = await api.put(
-        `/comments/${commentId}`,
+        `/api/comments/${commentId}`,
         { content: editingText },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -82,7 +82,7 @@ export default function ViewBlog() {
   // Delete comment
   const handleDeleteComment = async (commentId) => {
     try {
-      await api.delete(`/comments/${commentId}`, {
+      await api.delete(`/api/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setComments(comments.filter(c => c._id !== commentId));
@@ -97,7 +97,7 @@ export default function ViewBlog() {
     const checkSubscribed = async () => {
       if (!user || !post?.author?._id) return;
       try {
-        const { data } = await api.get(`/subscriptions/check/${post.author._id}`, {
+        const { data } = await api.get(`/api/subscriptions/check/${post.author._id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setSubscribed(data.subscribed);
@@ -114,7 +114,7 @@ const handleSubscribe = async () => {
   if (!user) return alert("Login to subscribe.");
   try {
     const { data } = await api.post(
-      `/subscriptions/${post.author._id}`,   
+      `/api/subscriptions/${post.author._id}`,   
       {},
       { headers: { Authorization: `Bearer ${user.token}` } }
     );

@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/categories");
+        const res = await api.get("/api/categories");
         const cats = [
           { _id: "all", name: "All", slug: "all", ...categoryMap["All"] },
         ];
@@ -68,7 +68,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await api.get("/posts");
+        const res = await api.get("/api/posts");
         setPosts(res.data.items || []);
       } catch (err) {
         console.error("Error fetching posts:", err);
