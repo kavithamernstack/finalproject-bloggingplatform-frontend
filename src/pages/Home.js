@@ -239,7 +239,7 @@ useEffect(() => {
                     className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden"
                   >
                     <img
-                      src={bannerUrl}
+                      src={getBannerUrl(post.banner)}
                       alt={post.title}
                       className="h-48 w-full object-cover"
                     />
