@@ -153,6 +153,10 @@ useEffect(() => {
     navigate(`/?${queryParams.toString()}`);
   };
 
+   // Helper for banner URL
+  const getBannerUrl = (banner) =>
+    banner ? `${API_BASE}${banner.startsWith("/") ? banner : "/" + banner}` : "/default-banner.jpg";
+
   return (
     <>
       <Navbar />
@@ -217,12 +221,9 @@ useEffect(() => {
           </h2>
 
           {filteredPosts.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-6 ">
+            <div className="grid md:grid-cols-3 gap-6">
               {filteredPosts.map((post) => {
-                const bannerUrl = post.banner
-                  ? `${API_BASE}${post.banner.startsWith("/") ? post.banner : "/" + post.banner
-                  }`
-                  : "/default-banner.jpg";
+                const bannerUrl = getBannerUrl(post.banner);
 
                 // Show first category name (fallback if empty)
                 const categoryName =
