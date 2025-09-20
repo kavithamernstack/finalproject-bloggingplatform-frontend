@@ -27,7 +27,7 @@ export default function CreatePost() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/api/categories");
+        const res = await api.get("/categories");
         setCategories(res.data);
         console.log("Categories:", res.data);
       } catch (err) {
@@ -77,7 +77,7 @@ export default function CreatePost() {
       formData.append("status", status); // draft or published
       if (banner) formData.append("banner", banner);
 
-      await api.post("/api/posts", formData, {
+      await api.post("/posts", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${user.token}`,
