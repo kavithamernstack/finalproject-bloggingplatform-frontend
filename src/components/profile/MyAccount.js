@@ -41,7 +41,7 @@ function MyAccount() {
 
     const fetchData = async () => {
       try {
-        const { data: profileData } = await api.get("/api/users/myprofile", {
+        const { data: profileData } = await api.get("/users/myprofile", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setProfile(profileData);
@@ -94,12 +94,12 @@ function MyAccount() {
         <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl shadow-sm border border-gray-200 p-6 flex items-center gap-6 hover:shadow-md transition mb-8">
           <img
             src={
-              user?.avatar
-                ? user.avatar.startsWith("http")
-                  ? user.avatar
-                  : `${API_BASE}${user.avatar}`
-                : "https://via.placeholder.com/80"
-            }
+   user?.avatar
+      ? user.avatar.startsWith("http")
+       ? user.avatar
+       : `${API_BASE}${user.avatar}`
+     : "https://via.placeholder.com/80"
+ }
             alt="avatar"
             className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm"
           />

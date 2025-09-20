@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/api/categories");
+        const res = await api.get("/categories");
         const cats = [
           { _id: "all", name: "All", slug: "all", ...categoryMap["All"] },
         ];
@@ -68,7 +68,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await api.get("/api/posts");
+        const res = await api.get("/posts");
         setPosts(res.data.items || []);
       } catch (err) {
         console.error("Error fetching posts:", err);
@@ -110,7 +110,7 @@ useEffect(() => {
     }
   }
 
-  // Search filter
+  // ✅ Search filter
   if (search) {
     filtered = filtered.filter((p) => {
       const titleMatch = p.title?.toLowerCase().includes(search);

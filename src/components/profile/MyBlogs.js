@@ -17,7 +17,7 @@ function MyBlogs() {
       if (!user) return;
 
       try {
-        const res = await api.get("/api/posts/myposts", {
+        const res = await api.get("/posts/myposts", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 

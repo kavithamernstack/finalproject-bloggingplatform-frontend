@@ -44,7 +44,7 @@ function EditProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await api.get("/api/users/myprofile");
+        const { data } = await api.get("/users/myprofile");
         setUser(data);
         setAvatarPreview(data.avatar || "");
         setContextUser(data); // initialize context
@@ -60,7 +60,7 @@ function EditProfile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAvatarFile(file); 
+      setAvatarFile(file); // ✅ store file separately
       setUser({ ...user, avatar: file });
       setAvatarPreview(URL.createObjectURL(file));
     }
@@ -81,7 +81,7 @@ function EditProfile() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      //  Update AuthContext so Navbar & MyAccount update instantly
+      // ✅ Update AuthContext so Navbar & MyAccount update instantly
       setUser((prev) => ({
         ...prev,
         name: res.data.user.name,
