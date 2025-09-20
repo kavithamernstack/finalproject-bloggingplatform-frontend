@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import Navbar from "../components/Layout/Navbar";
-import { API_BASE } from "../utils/constants";
+import { API_BASE } from "../utils/constant"
 import Footer from "../components/Layout/Footer";
 import {
   FaLaptop,
@@ -223,8 +223,6 @@ useEffect(() => {
           {filteredPosts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-6">
               {filteredPosts.map((post) => {
-                const bannerUrl = getBannerUrl(post.banner);
-
                 // Show first category name (fallback if empty)
                 const categoryName =
                   Array.isArray(post.categories) && post.categories.length > 0
