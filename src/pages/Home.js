@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import Navbar from "../components/Layout/Navbar";
-import { API_BASE } from "../utils/constant"
+import { API_BASE } from "../utils/constants";
 import Footer from "../components/Layout/Footer";
 import {
   FaLaptop,
@@ -45,7 +45,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/categories");
+        const res = await api.get("/api/categories");
         const cats = [
           { _id: "all", name: "All", slug: "all", ...categoryMap["All"] },
         ];
@@ -156,7 +156,7 @@ useEffect(() => {
    // Helper for banner URL
   const getBannerUrl = (banner) =>
     banner ? `${API_BASE}${banner.startsWith("/") ? banner : "/" + banner}` : "/default-banner.jpg";
-
+  
   return (
     <>
       <Navbar />
@@ -221,8 +221,13 @@ useEffect(() => {
           </h2>
 
           {filteredPosts.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-6 ">
               {filteredPosts.map((post) => {
+                const bannerUrl = post.banner
+                  ? `${API_BASE}${post.banner.startsWith("/") ? post.banner : "/" + post.banner
+                  }`
+                  : "/default-banner.jpg";
+
                 // Show first category name (fallback if empty)
                 const categoryName =
                   Array.isArray(post.categories) && post.categories.length > 0
@@ -237,7 +242,7 @@ useEffect(() => {
                     className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden"
                   >
                     <img
-                      src={getBannerUrl(post.banner)}
+                      src={bannerUrl}
                       alt={post.title}
                       className="h-48 w-full object-cover"
                     />
