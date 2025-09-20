@@ -219,7 +219,7 @@ useEffect(() => {
             <div className="grid md:grid-cols-3 gap-6 ">
               {filteredPosts.map((post) => {
                 const bannerUrl = post.banner
-                  ? `http://localhost:5000${post.banner.startsWith("/") ? post.banner : "/" + post.banner
+                  ? `${REACT_APP_API}${post.banner.startsWith("/") ? post.banner : "/" + post.banner
                   }`
                   : "/default-banner.jpg";
 
