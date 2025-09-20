@@ -77,7 +77,7 @@ export default function CreatePost() {
       formData.append("status", status); // draft or published
       if (banner) formData.append("banner", banner);
 
-      await api.post("/posts", formData, {
+      await api.post("/api/posts", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${user.token}`,
