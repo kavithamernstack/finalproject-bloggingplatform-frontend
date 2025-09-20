@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import Navbar from "../components/Layout/Navbar";
+import { API_BASE } from "../utils/constants";
 import Footer from "../components/Layout/Footer";
 import {
   FaLaptop,
@@ -44,7 +45,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/categories");
+        const res = await api.get("/api/categories");
         const cats = [
           { _id: "all", name: "All", slug: "all", ...categoryMap["All"] },
         ];
@@ -219,7 +220,7 @@ useEffect(() => {
             <div className="grid md:grid-cols-3 gap-6 ">
               {filteredPosts.map((post) => {
                 const bannerUrl = post.banner
-                  ? `http://localhost:5000${post.banner.startsWith("/") ? post.banner : "/" + post.banner
+                  ? `${API_BASE}${post.banner.startsWith("/") ? post.banner : "/" + post.banner
                   }`
                   : "/default-banner.jpg";
 
