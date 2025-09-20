@@ -45,7 +45,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/api/categories");
+        const res = await api.get("/categories");
         const cats = [
           { _id: "all", name: "All", slug: "all", ...categoryMap["All"] },
         ];
