@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import API from "../../api/api";
+import api from "../../api/api";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await api.post("/auth/login", { email, password });
       localStorage.setItem("token", res.data.token);
       setUser(res.data.user);
       toast.success("Login successful!");
