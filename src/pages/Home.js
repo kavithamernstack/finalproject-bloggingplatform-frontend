@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import Navbar from "../components/Layout/Navbar";
-import { API_BASE } from "../../utils/constants";
+import { API_BASE } from "../utils/constants"
 import Footer from "../components/Layout/Footer";
 import {
   FaLaptop,
