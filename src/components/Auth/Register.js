@@ -12,11 +12,16 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/api/auth/register", { name, email, password });
-      toast.success("Registration successful! Please login.");
+      const { data } = await api.post("/auth/register", { name, email, password });
+
+      // Option A — auto-login after registration (optional)
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      toast.success("Registration successful! Logged in.");
       navigate("/login");
+
     } catch (err) {
-      toast.error(err.response?.data?.message || "Registration failed");
+      toast.error(err.response?.data?.message || err.message || "Registration failed");
     }
   };
 
