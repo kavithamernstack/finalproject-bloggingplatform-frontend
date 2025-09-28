@@ -155,7 +155,7 @@ useEffect(() => {
 
    // Helper for banner URL
   const getBannerUrl = (banner) =>
-    banner ? `${API_BASE}${banner.startsWith("/") ? banner : "/" + banner}` : "/default-banner.jpg";
+    banner ? `${banner.startsWith("/") ? banner : "/" + banner}` : "/default-banner.jpg";
   
   return (
     <>
@@ -224,7 +224,7 @@ useEffect(() => {
             <div className="grid md:grid-cols-3 gap-6 ">
               {filteredPosts.map((post) => {
                 const bannerUrl = post.banner
-                  ? `${API_BASE}${post.banner.startsWith("/") ? post.banner : "/" + post.banner
+                  ? `${post.banner.startsWith("/") ? post.banner : "/" + post.banner
                   }`
                   : "/default-banner.jpg";
 

@@ -20,7 +20,7 @@ export default function CommentsTags() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const { data } = await api.get("/api/comments/my", {
+        const { data } = await api.get("/comments/my", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setComments(data);

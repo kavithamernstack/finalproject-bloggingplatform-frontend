@@ -37,7 +37,7 @@ export default function EditBlog() {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const res = await api.get(`/api/posts/${id}`);
+                const res = await api.get(`/posts/${id}`);
                 const post = res.data;
 
                 setTitle(post.title || "");

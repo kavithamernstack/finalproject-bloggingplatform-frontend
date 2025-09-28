@@ -30,7 +30,7 @@ export default function ViewBlog() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await api.get(`/api/posts/${id}`);
+        const res = await api.get(`/posts/${id}`);
         setPost(res.data);
 
         const { data: commentsData } = await api.get(`/api/comments/post/${id}`);

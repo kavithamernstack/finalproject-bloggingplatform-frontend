@@ -8,7 +8,7 @@ export default function BlogList() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await API.get("/api/posts"); // backend endpoint to get posts
+        const res = await API.get("/posts"); // backend endpoint to get posts
         console.log("API Response:", res.data);
 
         // Handle both cases: array or { posts: [...] }

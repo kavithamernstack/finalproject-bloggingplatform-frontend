@@ -23,7 +23,7 @@ export default function Navbar() {
   // Fetch notifications function
   const fetchNotifications = async () => {
     try {
-      const { data } = await api.get("/api/notifications");
+      const { data } = await api.get("/notifications");
       setNotifications(data); // your notifications state
     } catch (err) {
       console.error("Failed to fetch notifications:", err);
