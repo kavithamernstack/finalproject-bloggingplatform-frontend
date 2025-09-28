@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import api from "../../api/api";
 import { AuthContext } from "../../context/AuthContext";
-import { API_BASE } from '../../utils/constant'
+import { API_BASE } from "../../utils/constants"
 import Dashboard from "../Layout/DashBoard";
 import {
   BarChart,
