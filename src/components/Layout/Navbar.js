@@ -9,7 +9,8 @@ import {
   BellIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { API_BASE } from '../../utils/constant'
+import { API_BASE } from "../../utils/constants";
+
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
