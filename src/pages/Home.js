@@ -43,9 +43,7 @@ export default function Home() {
     const fetchCategories = async () => {
       try {
         const res = await api.get("/categories");
-        const cats = [
-          { _id: "all", name: "All", slug: "all", ...categoryMap["All"] },
-        ];
+        const cats = [{ _id: "all", name: "All", slug: "all", ...categoryMap["All"] }];
         res.data.forEach((c) => {
           cats.push({
             _id: c._id,
@@ -84,19 +82,11 @@ export default function Home() {
 
     if (categorySlug !== "all" && categories.length > 0) {
       const selectedCat = categories.find((c) => c.slug === categorySlug);
-
       if (selectedCat?._id && selectedCat._id !== "all") {
         filtered = filtered.filter((p) => {
           if (!Array.isArray(p.categories)) return false;
-
-          if (typeof p.categories[0] === "string") {
-            return p.categories.includes(selectedCat._id);
-          }
-
-          if (typeof p.categories[0] === "object") {
-            return p.categories.some((c) => c._id === selectedCat._id);
-          }
-
+          if (typeof p.categories[0] === "string") return p.categories.includes(selectedCat._id);
+          if (typeof p.categories[0] === "object") return p.categories.some((c) => c._id === selectedCat._id);
           return false;
         });
       }
@@ -113,12 +103,10 @@ export default function Home() {
 
         const categoryMatch = Array.isArray(p.categories)
           ? p.categories.some((cat) =>
-            typeof cat === "string"
-              ? categories.find((c) => c._id === cat)?.name
-                ?.toLowerCase()
-                .includes(search)
-              : cat.name?.toLowerCase().includes(search)
-          )
+              typeof cat === "string"
+                ? categories.find((c) => c._id === cat)?.name?.toLowerCase().includes(search)
+                : cat.name?.toLowerCase().includes(search)
+            )
           : false;
 
         return titleMatch || excerptMatch || authorMatch || categoryMatch;
@@ -130,21 +118,22 @@ export default function Home() {
 
   const handleCategoryClick = (slug) => {
     const queryParams = new URLSearchParams(location.search);
-    if (slug === "all") {
-      queryParams.delete("category");
-    } else {
-      queryParams.set("category", slug);
-    }
+    if (slug === "all") queryParams.delete("category");
+    else queryParams.set("category", slug);
     navigate(`/?${queryParams.toString()}`);
   };
 
-  // ✅ Updated banner helper for Cloudinary
-  // Helper for banner URL
-  const getBannerUrl = (post) =>
-    post.banner
-      ? post.banner // now this is Cloudinary URL
-      : "/default-banner.jpg";
+  // ----------------- UPDATED getBannerUrl -----------------
+  const DEFAULT_BANNER =
+    "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1690000000/default-banner.jpg";
 
+  const getBannerUrl = (post) => {
+    if (!post) return DEFAULT_BANNER;
+    if (post.banner && (post.banner.startsWith("http") || post.banner.startsWith("https"))) return post.banner;
+    if (post.banner && post.bannerMime) return `data:${post.bannerMime};base64,${post.banner}`;
+    return DEFAULT_BANNER;
+  };
+  // ----------------------------------------------------------
 
   return (
     <>
@@ -156,9 +145,7 @@ export default function Home() {
             Share Your Voice, Inspire the World
           </h1>
           <p className="text-[14px] md:text-xl text-gray-700 max-w-3xl mx-auto mb-10">
-            Welcome to PostHub — a place to write, connect, and explore. Publish
-            your ideas, inspire readers, and discover stories from passionate
-            writers across the globe.
+            Welcome to PostHub — a place to write, connect, and explore. Publish your ideas, inspire readers, and discover stories from passionate writers across the globe.
           </p>
           <Link
             to="/create-post"
@@ -171,28 +158,22 @@ export default function Home() {
 
       <section className="py-12 bg-gradient-to-r from-gray-50 to-gray-100">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
-            Explore Categories
-          </h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Explore Categories</h2>
           <div className="flex justify-center items-center gap-4 flex-wrap">
             {categories.map((category) => {
-              const activeCategory =
-                new URLSearchParams(location.search).get("category") || "all";
+              const activeCategory = new URLSearchParams(location.search).get("category") || "all";
               const isActive = activeCategory === category.slug;
 
               return (
                 <div
                   key={category._id}
                   onClick={() => handleCategoryClick(category.slug)}
-                  className={`flex flex-col items-center w-24 h-24 bg-white shadow rounded-xl p-6 cursor-pointer transition-all ${isActive
-                      ? "ring-2 ring-blue-500 shadow-lg"
-                      : "hover:shadow-lg hover:-translate-y-1"
-                    }`}
+                  className={`flex flex-col items-center w-24 h-24 bg-white shadow rounded-xl p-6 cursor-pointer transition-all ${
+                    isActive ? "ring-2 ring-blue-500 shadow-lg" : "hover:shadow-lg hover:-translate-y-1"
+                  }`}
                 >
                   <category.icon className={`w-6 h-6 ${category.color}`} />
-                  <span className="mt-2 text-xs font-medium text-gray-700 text-center">
-                    {category.name}
-                  </span>
+                  <span className="mt-2 text-xs font-medium text-gray-700 text-center">{category.name}</span>
                 </div>
               );
             })}
@@ -202,15 +183,12 @@ export default function Home() {
 
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            Latest Articles
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Latest Articles</h2>
 
           {filteredPosts.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-6 ">
+            <div className="grid md:grid-cols-3 gap-6">
               {filteredPosts.map((post) => {
                 const bannerUrl = getBannerUrl(post);
-
                 const categoryName =
                   Array.isArray(post.categories) && post.categories.length > 0
                     ? typeof post.categories[0] === "string"
@@ -219,29 +197,13 @@ export default function Home() {
                     : "Uncategorized";
 
                 return (
-                  <div
-                    key={post._id}
-                    className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden"
-                  >
-                    <img
-                      src={bannerUrl}
-                      alt={post.title}
-                      className="h-48 w-full object-cover"
-                    />
+                  <div key={post._id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden">
+                    <img src={bannerUrl} alt={post.title} className="h-48 w-full object-cover" />
                     <div className="p-4">
-                      <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">
-                        {post.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {post.excerpt}
-                      </p>
-                      <span className="block text-xs text-gray-400 mt-1 px-2 py-1 w-25 bg-slate-400 text-white text-xs font-medium rounded-full">
-                        {categoryName}
-                      </span>
-                      <Link
-                        to={`/post/${post._id}`}
-                        className="mt-3 inline-block text-blue-600 hover:underline text-sm font-medium"
-                      >
+                      <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{post.title}</h3>
+                      <p className="text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
+                      <span className="block text-xs text-gray-400 mt-1 px-2 py-1 w-25 bg-slate-400 text-white text-xs font-medium rounded-full">{categoryName}</span>
+                      <Link to={`/post/${post._id}`} className="mt-3 inline-block text-blue-600 hover:underline text-sm font-medium">
                         Read More →
                       </Link>
                     </div>
