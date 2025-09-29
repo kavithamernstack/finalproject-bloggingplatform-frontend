@@ -137,13 +137,7 @@ export default function ViewBlog() {
       {post.banner && (
         <div className="mb-8">
           <img
-            src={
-              post.banner.startsWith("http")
-                ? post.banner
-                : post.banner.startsWith("/uploads")
-                  ? `https://project-blogs-1.netlify.app${post.banner}`
-                  : `data:image/jpeg;base64,${post.banner}`
-            }
+           src={post.banner ? `data:${post.bannerMime};base64,${post.banner}` : "/default-banner.jpg"}
             alt={post.title}
             className="w-full h-72 object-cover rounded-2xl shadow-md"
           />

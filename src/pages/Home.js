@@ -154,21 +154,11 @@ export default function Home() {
   };
 
   // Helper for banner URL
-  // Helper for banner URL
-  const getBannerUrl = (banner) => {
-    if (!banner) return "/default-banner.jpg";
+  const getBannerUrl = (post) =>
+    post.banner
+      ? `data:${post.bannerMime};base64,${post.banner}`
+      : "/default-banner.jpg";
 
-    // If already a full URL (http/https), return directly
-    if (banner.startsWith("http")) return banner;
-
-    // If Base64 string (long, no /uploads/), return data URL
-    if (!banner.startsWith("/uploads")) {
-      return `data:image/jpeg;base64,${banner}`;
-    }
-
-    // Fallback: old /uploads path (for compatibility)
-    return `${API_BASE}${banner.startsWith("/") ? banner : "/" + banner}`;
-  };
   return (
     <>
       <Navbar />
@@ -235,7 +225,7 @@ export default function Home() {
           {filteredPosts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-6 ">
               {filteredPosts.map((post) => {
-                const bannerUrl = getBannerUrl(post.banner);
+                const bannerUrl = getBannerUrl(post);
 
                 // Show first category name (fallback if empty)
                 const categoryName =
