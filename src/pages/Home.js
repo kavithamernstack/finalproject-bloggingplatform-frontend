@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import Navbar from "../components/Layout/Navbar";
-import { API_BASE } from "../utils/constants"
 import Footer from "../components/Layout/Footer";
 import {
   FaLaptop,
@@ -26,7 +25,6 @@ export default function Home() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Icon + color map
   const categoryMap = {
     Technology: { icon: FaLaptop, color: "text-blue-500" },
     Health: { icon: FaHeart, color: "text-red-500" },
@@ -41,7 +39,6 @@ export default function Home() {
     All: { icon: FaGlobe, color: "text-gray-500" },
   };
 
-  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -65,7 +62,6 @@ export default function Home() {
     fetchCategories();
   }, []);
 
-  // Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -79,8 +75,6 @@ export default function Home() {
     fetchPosts();
   }, []);
 
-
-  // Filter posts by category + search
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const categorySlug = queryParams.get("category") || "all";
@@ -88,7 +82,6 @@ export default function Home() {
 
     let filtered = [...posts];
 
-    // Category filter
     if (categorySlug !== "all" && categories.length > 0) {
       const selectedCat = categories.find((c) => c.slug === categorySlug);
 
@@ -96,12 +89,10 @@ export default function Home() {
         filtered = filtered.filter((p) => {
           if (!Array.isArray(p.categories)) return false;
 
-          // Case 1: string IDs
           if (typeof p.categories[0] === "string") {
             return p.categories.includes(selectedCat._id);
           }
 
-          // Case 2: object refs
           if (typeof p.categories[0] === "object") {
             return p.categories.some((c) => c._id === selectedCat._id);
           }
@@ -111,19 +102,15 @@ export default function Home() {
       }
     }
 
-    // ✅ Search filter
     if (search) {
       filtered = filtered.filter((p) => {
         const titleMatch = p.title?.toLowerCase().includes(search);
         const excerptMatch = p.excerpt?.toLowerCase().includes(search);
-
-        // Handle author (string or populated object)
         const authorMatch =
           typeof p.author === "string"
             ? p.author.toLowerCase().includes(search)
             : p.author?.name?.toLowerCase().includes(search);
 
-        // Handle categories (array of ids or objects)
         const categoryMatch = Array.isArray(p.categories)
           ? p.categories.some((cat) =>
             typeof cat === "string"
@@ -141,8 +128,6 @@ export default function Home() {
     setFilteredPosts(filtered);
   }, [location.search, posts, categories]);
 
-
-  // Handle category click
   const handleCategoryClick = (slug) => {
     const queryParams = new URLSearchParams(location.search);
     if (slug === "all") {
@@ -153,17 +138,18 @@ export default function Home() {
     navigate(`/?${queryParams.toString()}`);
   };
 
+  // ✅ Updated banner helper for Cloudinary
   // Helper for banner URL
   const getBannerUrl = (post) =>
     post.banner
-      ? `data:${post.bannerMime};base64,${post.banner}`
+      ? post.banner // now this is Cloudinary URL
       : "/default-banner.jpg";
+
 
   return (
     <>
       <Navbar />
 
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 py-20">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
@@ -183,7 +169,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section */}
       <section className="py-12 bg-gradient-to-r from-gray-50 to-gray-100">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
@@ -200,8 +185,8 @@ export default function Home() {
                   key={category._id}
                   onClick={() => handleCategoryClick(category.slug)}
                   className={`flex flex-col items-center w-24 h-24 bg-white shadow rounded-xl p-6 cursor-pointer transition-all ${isActive
-                    ? "ring-2 ring-blue-500 shadow-lg"
-                    : "hover:shadow-lg hover:-translate-y-1"
+                      ? "ring-2 ring-blue-500 shadow-lg"
+                      : "hover:shadow-lg hover:-translate-y-1"
                     }`}
                 >
                   <category.icon className={`w-6 h-6 ${category.color}`} />
@@ -215,7 +200,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Latest Articles */}
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
@@ -227,7 +211,6 @@ export default function Home() {
               {filteredPosts.map((post) => {
                 const bannerUrl = getBannerUrl(post);
 
-                // Show first category name (fallback if empty)
                 const categoryName =
                   Array.isArray(post.categories) && post.categories.length > 0
                     ? typeof post.categories[0] === "string"
