@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/api";
+import { API_BASE } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
 import {
   FaFacebook,
@@ -33,7 +34,7 @@ export default function ViewBlog() {
         const res = await api.get(`/posts/${id}`);
         setPost(res.data);
 
-        const { data: commentsData } = await api.get(`/api/comments/post/${id}`);
+        const { data: commentsData } = await api.get(`/comments/post/${id}`);
         setComments(commentsData);
       } catch (err) {
         console.error("Error fetching post/comments:", err);
@@ -50,7 +51,7 @@ export default function ViewBlog() {
 
     try {
       const { data } = await api.post(
-        "/api/comments",
+        "/comments",
         { postId: id, content: newComment },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -67,7 +68,7 @@ export default function ViewBlog() {
 
     try {
       const { data } = await api.put(
-        `/api/comments/${commentId}`,
+        `/comments/${commentId}`,
         { content: editingText },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -82,7 +83,7 @@ export default function ViewBlog() {
   // Delete comment
   const handleDeleteComment = async (commentId) => {
     try {
-      await api.delete(`/api/comments/${commentId}`, {
+      await api.delete(`/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setComments(comments.filter(c => c._id !== commentId));
@@ -97,7 +98,7 @@ export default function ViewBlog() {
     const checkSubscribed = async () => {
       if (!user || !post?.author?._id) return;
       try {
-        const { data } = await api.get(`/api/subscriptions/check/${post.author._id}`, {
+        const { data } = await api.get(`/subscriptions/check/${post.author._id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setSubscribed(data.subscribed);
@@ -108,13 +109,13 @@ export default function ViewBlog() {
     checkSubscribed();
   }, [user, post]);
 
-  // toggle subscribe
+
  // toggle subscribe
 const handleSubscribe = async () => {
   if (!user) return alert("Login to subscribe.");
   try {
     const { data } = await api.post(
-      `/api/subscriptions/${post.author._id}`,   
+      `/subscriptions/${post.author._id}`,   
       {},
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
@@ -137,7 +138,7 @@ const handleSubscribe = async () => {
       {post.banner && (
         <div className="mb-8">
           <img
-            src={post.banner.startsWith("http") ? post.banner : `http://localhost:5000${post.banner}`}
+            src={post.banner.startsWith("http") ? post.banner : `${API_BASE}${post.banner}`}
             alt={post.title}
             className="w-full h-72 object-cover rounded-2xl shadow-md"
           />
