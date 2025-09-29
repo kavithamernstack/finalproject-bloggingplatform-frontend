@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/api";
-import { API_BASE } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
 import {
   FaFacebook,
@@ -138,7 +137,7 @@ const handleSubscribe = async () => {
       {post.banner && (
         <div className="mb-8">
           <img
-            src={post.banner.startsWith("http") ? post.banner : `${API_BASE}${post.banner}`}
+            src={post.banner.startsWith("http") ? post.banner : `https://project-blogs-1.netlify.app${post.banner}`}
             alt={post.title}
             className="w-full h-72 object-cover rounded-2xl shadow-md"
           />
