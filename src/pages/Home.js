@@ -103,10 +103,10 @@ export default function Home() {
 
         const categoryMatch = Array.isArray(p.categories)
           ? p.categories.some((cat) =>
-              typeof cat === "string"
-                ? categories.find((c) => c._id === cat)?.name?.toLowerCase().includes(search)
-                : cat.name?.toLowerCase().includes(search)
-            )
+            typeof cat === "string"
+              ? categories.find((c) => c._id === cat)?.name?.toLowerCase().includes(search)
+              : cat.name?.toLowerCase().includes(search)
+          )
           : false;
 
         return titleMatch || excerptMatch || authorMatch || categoryMatch;
@@ -124,16 +124,13 @@ export default function Home() {
   };
 
   // ----------------- UPDATED getBannerUrl -----------------
-  const DEFAULT_BANNER =
-    "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v1690000000/default-banner.jpg";
-
   const getBannerUrl = (post) => {
-    if (!post) return DEFAULT_BANNER;
-    if (post.banner && (post.banner.startsWith("http") || post.banner.startsWith("https"))) return post.banner;
-    if (post.banner && post.bannerMime) return `data:${post.bannerMime};base64,${post.banner}`;
-    return DEFAULT_BANNER;
+    if (!post || !post.banner) {
+      // fallback just in case backend failed to send a banner
+      return process.env.REACT_APP_DEFAULT_BANNER || "/default-banner.jpg";
+    }
+    return post.banner;
   };
-  // ----------------------------------------------------------
 
   return (
     <>
@@ -168,9 +165,8 @@ export default function Home() {
                 <div
                   key={category._id}
                   onClick={() => handleCategoryClick(category.slug)}
-                  className={`flex flex-col items-center w-24 h-24 bg-white shadow rounded-xl p-6 cursor-pointer transition-all ${
-                    isActive ? "ring-2 ring-blue-500 shadow-lg" : "hover:shadow-lg hover:-translate-y-1"
-                  }`}
+                  className={`flex flex-col items-center w-24 h-24 bg-white shadow rounded-xl p-6 cursor-pointer transition-all ${isActive ? "ring-2 ring-blue-500 shadow-lg" : "hover:shadow-lg hover:-translate-y-1"
+                    }`}
                 >
                   <category.icon className={`w-6 h-6 ${category.color}`} />
                   <span className="mt-2 text-xs font-medium text-gray-700 text-center">{category.name}</span>
@@ -198,7 +194,7 @@ export default function Home() {
 
                 return (
                   <div key={post._id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden">
-                    <img src={bannerUrl} alt={post.title} className="h-48 w-full object-cover" />
+                    <img src={bannerUrl} alt={post.title || "Post Banner" } className="h-48 w-full object-cover" />
                     <div className="p-4">
                       <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{post.title}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
