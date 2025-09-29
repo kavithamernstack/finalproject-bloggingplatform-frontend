@@ -79,67 +79,67 @@ export default function Home() {
     fetchPosts();
   }, []);
 
- 
-// Filter posts by category + search
-useEffect(() => {
-  const queryParams = new URLSearchParams(location.search);
-  const categorySlug = queryParams.get("category") || "all";
-  const search = queryParams.get("search")?.toLowerCase() || "";
 
-  let filtered = [...posts];
+  // Filter posts by category + search
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const categorySlug = queryParams.get("category") || "all";
+    const search = queryParams.get("search")?.toLowerCase() || "";
 
-  // Category filter
-  if (categorySlug !== "all" && categories.length > 0) {
-    const selectedCat = categories.find((c) => c.slug === categorySlug);
+    let filtered = [...posts];
 
-    if (selectedCat?._id && selectedCat._id !== "all") {
-      filtered = filtered.filter((p) => {
-        if (!Array.isArray(p.categories)) return false;
+    // Category filter
+    if (categorySlug !== "all" && categories.length > 0) {
+      const selectedCat = categories.find((c) => c.slug === categorySlug);
 
-        // Case 1: string IDs
-        if (typeof p.categories[0] === "string") {
-          return p.categories.includes(selectedCat._id);
-        }
+      if (selectedCat?._id && selectedCat._id !== "all") {
+        filtered = filtered.filter((p) => {
+          if (!Array.isArray(p.categories)) return false;
 
-        // Case 2: object refs
-        if (typeof p.categories[0] === "object") {
-          return p.categories.some((c) => c._id === selectedCat._id);
-        }
+          // Case 1: string IDs
+          if (typeof p.categories[0] === "string") {
+            return p.categories.includes(selectedCat._id);
+          }
 
-        return false;
-      });
+          // Case 2: object refs
+          if (typeof p.categories[0] === "object") {
+            return p.categories.some((c) => c._id === selectedCat._id);
+          }
+
+          return false;
+        });
+      }
     }
-  }
 
-  // ✅ Search filter
-  if (search) {
-    filtered = filtered.filter((p) => {
-      const titleMatch = p.title?.toLowerCase().includes(search);
-      const excerptMatch = p.excerpt?.toLowerCase().includes(search);
+    // ✅ Search filter
+    if (search) {
+      filtered = filtered.filter((p) => {
+        const titleMatch = p.title?.toLowerCase().includes(search);
+        const excerptMatch = p.excerpt?.toLowerCase().includes(search);
 
-      // Handle author (string or populated object)
-      const authorMatch =
-        typeof p.author === "string"
-          ? p.author.toLowerCase().includes(search)
-          : p.author?.name?.toLowerCase().includes(search);
+        // Handle author (string or populated object)
+        const authorMatch =
+          typeof p.author === "string"
+            ? p.author.toLowerCase().includes(search)
+            : p.author?.name?.toLowerCase().includes(search);
 
-      // Handle categories (array of ids or objects)
-      const categoryMatch = Array.isArray(p.categories)
-        ? p.categories.some((cat) =>
+        // Handle categories (array of ids or objects)
+        const categoryMatch = Array.isArray(p.categories)
+          ? p.categories.some((cat) =>
             typeof cat === "string"
               ? categories.find((c) => c._id === cat)?.name
-                  ?.toLowerCase()
-                  .includes(search)
+                ?.toLowerCase()
+                .includes(search)
               : cat.name?.toLowerCase().includes(search)
           )
-        : false;
+          : false;
 
-      return titleMatch || excerptMatch || authorMatch || categoryMatch;
-    });
-  }
+        return titleMatch || excerptMatch || authorMatch || categoryMatch;
+      });
+    }
 
-  setFilteredPosts(filtered);
-}, [location.search, posts, categories]);
+    setFilteredPosts(filtered);
+  }, [location.search, posts, categories]);
 
 
   // Handle category click
@@ -153,10 +153,22 @@ useEffect(() => {
     navigate(`/?${queryParams.toString()}`);
   };
 
-   // Helper for banner URL
-  const getBannerUrl = (banner) =>
-    banner ? `${API_BASE}${banner.startsWith("/") ? banner : "/" + banner}` : "/default-banner.jpg";
-  
+  // Helper for banner URL
+  // Helper for banner URL
+  const getBannerUrl = (banner) => {
+    if (!banner) return "/default-banner.jpg";
+
+    // If already a full URL (http/https), return directly
+    if (banner.startsWith("http")) return banner;
+
+    // If Base64 string (long, no /uploads/), return data URL
+    if (!banner.startsWith("/uploads")) {
+      return `data:image/jpeg;base64,${banner}`;
+    }
+
+    // Fallback: old /uploads path (for compatibility)
+    return `${API_BASE}${banner.startsWith("/") ? banner : "/" + banner}`;
+  };
   return (
     <>
       <Navbar />
@@ -198,8 +210,8 @@ useEffect(() => {
                   key={category._id}
                   onClick={() => handleCategoryClick(category.slug)}
                   className={`flex flex-col items-center w-24 h-24 bg-white shadow rounded-xl p-6 cursor-pointer transition-all ${isActive
-                      ? "ring-2 ring-blue-500 shadow-lg"
-                      : "hover:shadow-lg hover:-translate-y-1"
+                    ? "ring-2 ring-blue-500 shadow-lg"
+                    : "hover:shadow-lg hover:-translate-y-1"
                     }`}
                 >
                   <category.icon className={`w-6 h-6 ${category.color}`} />
@@ -223,7 +235,7 @@ useEffect(() => {
           {filteredPosts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-6 ">
               {filteredPosts.map((post) => {
-                 const bannerUrl = getBannerUrl(post.banner);
+                const bannerUrl = getBannerUrl(post.banner);
 
                 // Show first category name (fallback if empty)
                 const categoryName =

@@ -109,20 +109,20 @@ export default function ViewBlog() {
   }, [user, post]);
 
 
- // toggle subscribe
-const handleSubscribe = async () => {
-  if (!user) return alert("Login to subscribe.");
-  try {
-    const { data } = await api.post(
-      `/subscriptions/${post.author._id}`,   
-      {},
-      { headers: { Authorization: `Bearer ${user.token}` } }
-    );
-    setSubscribed(data.subscribed);
-  } catch (err) {
-    console.error("Error subscribing:", err);
-  }
-};
+  // toggle subscribe
+  const handleSubscribe = async () => {
+    if (!user) return alert("Login to subscribe.");
+    try {
+      const { data } = await api.post(
+        `/subscriptions/${post.author._id}`,
+        {},
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      setSubscribed(data.subscribed);
+    } catch (err) {
+      console.error("Error subscribing:", err);
+    }
+  };
 
 
 
@@ -137,7 +137,13 @@ const handleSubscribe = async () => {
       {post.banner && (
         <div className="mb-8">
           <img
-            src={post.banner.startsWith("http") ? post.banner : `https://project-blogs-1.netlify.app${post.banner}`}
+            src={
+              post.banner.startsWith("http")
+                ? post.banner
+                : post.banner.startsWith("/uploads")
+                  ? `https://project-blogs-1.netlify.app${post.banner}`
+                  : `data:image/jpeg;base64,${post.banner}`
+            }
             alt={post.title}
             className="w-full h-72 object-cover rounded-2xl shadow-md"
           />
