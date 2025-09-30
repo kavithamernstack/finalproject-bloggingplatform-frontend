@@ -71,23 +71,27 @@ function EditProfile() {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("name", name);
-      formData.append("bio", bio);
+      formData.append("name", user.name || "");
+      formData.append("bio", user.bio || "");
+
       if (avatarFile) {
         formData.append("avatar", avatarFile);
+      }
+
+      // Append all social links
+      if (user.links) {
+        Object.entries(user.links).forEach(([key, value]) => {
+          formData.append(`links[${key}]`, value || "");
+        });
       }
 
       const res = await api.put("/users/updateprofile", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      // ✅ Update AuthContext so Navbar & MyAccount update instantly
-      setUser((prev) => ({
-        ...prev,
-        name: res.data.user.name,
-        bio: res.data.user.bio,
-        avatar: res.data.user.avatar, // updated avatar path from backend
-      }));
+      // Update state and context
+      setUser(res.data.user);
+      setContextUser(res.data.user);
 
       alert("Profile updated successfully!");
     } catch (err) {
@@ -95,7 +99,6 @@ function EditProfile() {
       alert("Failed to update profile");
     }
   };
-
 
   if (loading) return <p>Loading...</p>;
   if (!user) return <p>No user data found</p>;
