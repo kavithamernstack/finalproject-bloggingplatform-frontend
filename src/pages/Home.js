@@ -127,7 +127,7 @@ export default function Home() {
   const getBannerUrl = (post) => {
     if (!post || !post.banner) {
       // fallback just in case backend failed to send a banner
-      return process.env.REACT_APP_DEFAULT_BANNER || "/default-banner.jpg";
+      return process.env.REACT_APP_DEFAULT_BANNER || "/default_1_jlzzn0.jpg";
     }
     return post.banner;
   };

@@ -137,7 +137,7 @@ export default function ViewBlog() {
       {post.banner && (
         <div className="mb-8">
           <img
-           src={post.banner ? `data:${post.bannerMime};base64,${post.banner}` : "/default-banner.jpg"}
+           src={post.banner ? `data:${post.bannerMime};base64,${post.banner}` : "/default_1_jlzzn0.jpg"}
             alt={post.title}
             className="w-full h-72 object-cover rounded-2xl shadow-md"
           />
