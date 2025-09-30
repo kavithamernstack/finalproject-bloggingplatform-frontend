@@ -16,6 +16,7 @@ export default function Login() {
       const { data } = await api.post("/auth/login", { email, password });
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user); 
       toast.success("Login successful");
       navigate("/");
     } catch (err) {

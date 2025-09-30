@@ -112,17 +112,21 @@ export default function ViewBlog() {
   // toggle subscribe
   const handleSubscribe = async () => {
     if (!user) return alert("Login to subscribe.");
+    if (!post?.author?._id) return alert("Author info not available");
     try {
-      const { data } = await api.post(
+      const res = await api.post(
         `/subscriptions/${post.author._id}`,
         {},
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
-      setSubscribed(data.subscribed);
+      // API should return { subscribed: true/false }
+      setSubscribed(res.data.subscribed);
     } catch (err) {
-      console.error("Error subscribing:", err);
+      console.error("Error subscribing:", err.response?.data || err.message);
+      alert("Subscription failed. Check console.");
     }
   };
+
 
 
 
@@ -137,7 +141,7 @@ export default function ViewBlog() {
       {post.banner && (
         <div className="mb-8">
           <img
-           src={post.banner ? `data:${post.bannerMime};base64,${post.banner}` : "/default_1_jlzzn0.jpg"}
+            src={post.banner ? `data:${post.bannerMime};base64,${post.banner}` : "/default_1_jlzzn0.jpg"}
             alt={post.title}
             className="w-full h-72 object-cover rounded-2xl shadow-md"
           />
@@ -164,7 +168,7 @@ export default function ViewBlog() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-          <span>✍️ {post.author?.username || "Unknown"}</span>
+          <span>✍️ {post.author?.username || post.author?.name || "Unknown"}</span>
           <span>📅 {new Date(post.createdAt).toLocaleDateString()}</span>
           {post.categories?.map((c, idx) => (
             <span key={idx} className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-600 rounded-full">{c.name}</span>
