@@ -115,19 +115,18 @@ export default function ViewBlog() {
   if (!post?.author?._id) return alert("Author info not available");
 
   try {
-    // Call DELETE to toggle subscription as backend expects
-    const { data } = await api.delete(
+    const { data } = await api.post(
       `/subscriptions/${post.author._id}`,
+      {},
       { headers: { Authorization: `Bearer ${user.token}` } }
     );
-
-    // Update subscribed state from backend response
-    setSubscribed(data.subscribed);
+    setSubscribed(data.subscribed); // backend should return updated status
   } catch (err) {
     console.error("Error subscribing:", err.response?.data || err.message);
     alert("Subscription failed. Check console.");
   }
 };
+
 
 
 
