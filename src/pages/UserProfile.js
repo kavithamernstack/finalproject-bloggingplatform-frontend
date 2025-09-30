@@ -90,7 +90,7 @@ function EditProfile() {
       });
 
       // Update state and context
-      setUser(res.data.user);
+      setUser(res.data.user);          // ✅ update local state
       setContextUser(res.data.user);
 
       alert("Profile updated successfully!");

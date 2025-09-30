@@ -180,7 +180,7 @@ export default function Navbar() {
                   className="w-10 h-10 rounded-full overflow-hidden border border-gray-300"
                 >
                   {user.avatar ? (
-                    <img src={`${API_BASE}${user.avatar}`} alt="avatar" className="w-full h-full object-cover" />
+                    <img src={user.avatar ? `${API_BASE}${user.avatar}` : "https://via.placeholder.com/40"} alt="avatar" className="w-full h-full object-cover" />
 
                   ) : (
                     <span className="flex items-center justify-center w-full h-full bg-blue-500 text-white font-bold">
