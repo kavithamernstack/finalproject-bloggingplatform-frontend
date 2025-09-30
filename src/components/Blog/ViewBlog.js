@@ -32,7 +32,7 @@ export default function ViewBlog() {
       try {
         const res = await api.get(`/posts/${id}`);
         setPost(res.data);
-
+        console.log("Fetched post:", res.data);
         const { data: commentsData } = await api.get(`/comments/post/${id}`);
         setComments(commentsData);
       } catch (err) {
@@ -126,11 +126,6 @@ export default function ViewBlog() {
     alert("Subscription failed. Check console.");
   }
 };
-
-
-
-
-
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!post) return <p className="text-center mt-10 text-red-500">Post not found.</p>;
