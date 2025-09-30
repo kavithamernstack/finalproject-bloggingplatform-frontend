@@ -62,7 +62,7 @@ function MyBlogs() {
 
   const handleUnpublish = async (id) => {
     try {
-      const res = await api.put(`/posts/unpublish/${id}`, {}, {
+      const res = await api.put(`/posts/unpublish/${id}`, {status: "post draft"}, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setBlogs(blogs.map((b) => (b.id === id ? { ...b, status: res.data.status } : b)));
