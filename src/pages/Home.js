@@ -124,13 +124,20 @@ export default function Home() {
   };
 
   // ----------------- UPDATED getBannerUrl -----------------
-  const getBannerUrl = (post) => {
-    if (!post || !post.banner) {
-      // fallback just in case backend failed to send a banner
-      return process.env.REACT_APP_DEFAULT_BANNER || "/default_1_jlzzn0.jpg";
-    }
+const DEFAULT_BANNER = process.env.DEFAULT_BANNER_URL || "https://res.cloudinary.com/dpjhn8gha/image/upload/v1759210894/default_1_jlzzn0.jpg";
+
+const getBannerUrl = (post) => {
+  if (!post || !post.banner) return DEFAULT_BANNER;
+
+  // If already a valid URL
+  if (post.banner.startsWith("http") || post.banner.startsWith("https")) {
     return post.banner;
-  };
+  }
+
+  // If it's stored locally in /uploads
+  return `${process.env.REACT_APP_API || ""}${post.banner}`;
+};
+
 
   return (
     <>
